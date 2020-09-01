@@ -4,7 +4,9 @@
   "description": "Alliance Services for EVE",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd client && npm run start",
+    "build": "cd client && npm run build"
   },
   "author": "Isis Loreda",
   "license": "ISC",
