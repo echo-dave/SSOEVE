@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
-import Login from "./components/Login";
-import Services from "./components/Services";
+import Login from "./Pages/Login";
+import Services from "./Pages/Services";
 
 
 function App() {  
