@@ -1,22 +1,18 @@
 const db = require("../models");
 const qs = require("qs");
 const axios = require("axios");
-import sso from "../controllers/sso";
 
 module.exports = function (app) {
   //sent for initial SSO login request
   app.get("/api/sso", function (req, res) {
     res.json({CLIENTID:process.env.CLIENTID, ESI:process.env.ESI, CALLBACKURL:process.env.CALLBACKURL, STATE:process.env.STATE});
     });
-  
-  //sent to verify the character after the SSO login callback
-  app.post("/api/authsso", sso.loginSSO)
 
   app.get("/api/refresh/:charID", async (req, res) => {
     console.log("params: " + req.params + " query: " + req.query);
     db.Pilot.findOne({ id: req.params.charID })
       .select("id refreshToken -_id")
-      .then(pilot => {
+      .then(async pilot => {
         console.log("doc: \n", pilot);
         let key = Buffer.from(
           `${process.env.CLIENTID}:${process.env.SECRETKEY}`
