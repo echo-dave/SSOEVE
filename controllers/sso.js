@@ -1,7 +1,7 @@
 const db = require("../models");
 const qs = require("qs");
 const axios = require("axios");
-import * as Axios from "../utils/axios";
+const Axios = "../utils/axios.js";
 
 exports.loginSSO = async (req, res) => {
     let appKey = Buffer.from(`${process.env.CLIENTID}:${process.env.SECRETKEY}`).toString('base64');
