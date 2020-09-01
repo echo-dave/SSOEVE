@@ -1,0 +1,20 @@
+{
+  "name": "eveservices",
+  "version": "0.1.0",
+  "description": "Alliance Services for EVE",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Isis Loreda",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "bulma": "^0.9.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.2",
+    "morgan": "^1.10.0",
+    "qs": "^6.9.4"
+  }
+}
