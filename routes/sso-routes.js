@@ -1,4 +1,4 @@
-const sso = "../controllers/sso";
+const sso = require("../controllers/sso");
 const express = require("express");
 const router = express.Router();
   
