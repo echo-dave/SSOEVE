@@ -6,14 +6,23 @@ function Services(props) {
     const [charInfo, setCharInfo] = useState(null);
     const [locations, setLocations] = useState([]);
 
-  useEffect(async () => {
+    useEffect(() => {
+        (async () => {
       try {
-        let response = await axios.get("/api/authsso");
+        const query = new URLSearchParams(props.location.search);
+
+        let response = await axios.post("/api/authsso", {ssoCode: query.get("code"),state: query.get("state")});
         console.log(response.data);
+
+        setCharID(response.data.charID);
+        setCharInfo(response.data);
+        sessionStorage.setItem("charID", response.data.charID);
+
       } catch (error) {
           console.log(error);
       }
-    })
+    })();
+},[])
 
     return(
         <div>
