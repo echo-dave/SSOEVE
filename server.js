@@ -31,8 +31,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //routes
-const ssoRoutes = "./routes/ssoRoutes.js";
 require("./routes/api-routes.js")(app);
+const sso = require("./routes/sso-routes.js");
+app.use('/',sso);
+
 
 // Serve up static assets (usually on heroku)
 if (process.env.NODE_ENV === "production") {
