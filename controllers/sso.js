@@ -1,29 +1,41 @@
 const db = require("../models");
 const qs = require("qs");
 const axios = require("axios");
-const Axios = "../utils/axios.js";
+const Axios = require("../utils/axios.js");
+const { response } = require("express");
 
 exports.loginSSO = async (req, res) => {
+    //getting the bearer token after callback from sso login
+    let token;
+    let auth;
+    console.log("body \n", req.body);
     let appKey = Buffer.from(`${process.env.CLIENTID}:${process.env.SECRETKEY}`).toString('base64');
-    
-    let res = await axios.post(
-        "https://login.eveonline.com/v2/oauth/token",
-        { grant_type: "authorization_code", code: req.body.ssoCode },
-        {
-          headers: {
-            Authorization: `Basic ${appKey}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
+    try {
+        auth = await axios.post(
+            "https://login.eveonline.com/v2/oauth/token",
+            { grant_type: "authorization_code", code: req.body.ssoCode },
+            {
+              headers: {
+                Authorization: `Basic ${appKey}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          token = auth.data.access_token;
+    } catch (error) {
+        console.log(error.response);
+        res.status(error.response.status).json({statusText: error.response.statusText})
+    }
+            //verify the character using the bearer to get the characterId usded to get public info
     let charID = await axios
       .get("https://login.eveonline.com/oauth/verify", {
         headers: {
-          Authorization: `Bearer ${res.data.access_token}`,
+          Authorization: `Bearer ${auth.data.access_token}`,
         },
       })
     charID = charID.data.CharacterID;
 
+    //getting all the public info
     let tempInfo;
     Promise.all([
       Axios.get(`characters/${charID}`, token).then(async characterInfo => {
@@ -67,11 +79,14 @@ exports.loginSSO = async (req, res) => {
       ])
       })
     ]).then(() => {
-        res.json(tempInfo)
+        res.json({charID, ...tempInfo})
       console.log("alltempinfo ", tempInfo);
-      axios.post(`/api/charInfo`, {...tempInfo, id: charID, token: res.data.access_token, refreshToken: res.data.refresh_token}).then(data => {
-        console.log("response ", data.data);
-      });
+      axios.post(`http://localhost:8080/api/charInfo`, {...tempInfo, id: charID, token: auth.data.access_token, refreshToken: auth.data.refresh_token})
+      .then(() => {
+      }).catch(err => {
+          console.log("err \n", err.response);
+          res.json(err);
+      })
 
     })
  
