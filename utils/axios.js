@@ -1,4 +1,4 @@
-        import axios from 'axios';
+        const axios = require("axios");
 
         function post (endpoint) {
             return axios.post(`https://esi.evetech.net/latest/${endpoint}`, {
@@ -22,4 +22,4 @@
              return axios.get(`/api/refresh/${charID}`)
          }
 
-        export {post, get, refresh}
+        module.exports = {post, get, refresh}
